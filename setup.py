@@ -4,7 +4,7 @@ from setuptools import (
     setup,
     find_packages)
 
-version = '0.1.3'
+version = '0.1.4'
 
 if sys.argv[-1] == 'tag':
     print("Tagging the version on github:")
