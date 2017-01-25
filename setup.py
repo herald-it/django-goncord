@@ -4,7 +4,7 @@ from setuptools import (
     setup,
     find_packages)
 
-version = '0.1.0'
+version = '0.1.2'
 
 if sys.argv[-1] == 'tag':
     print("Tagging the version on github:")
@@ -20,8 +20,8 @@ setup(
     maintainer='Dmitry Kuznetsov',
     maintainer_email='scroll42ru@gmail.com',
 
-    url='https://github.com/herald-it/django-yamaps',
-    download_url='https://github.com/herald-it/django-yamaps/archive/%s.tar.gz' % (
+    url='https://github.com/herald-it/django-goncord',
+    download_url='https://github.com/herald-it/django-goncord/archive/%s.tar.gz' % (
         version),
 
     description='A django widget which allows you to create multiple auth system.',
@@ -30,7 +30,6 @@ setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Framework :: Django',
-        'Framework :: Django :: 1.10',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: Russian',
@@ -43,10 +42,10 @@ setup(
     ],
     license='MIT',
 
-    packages=find_packages(),
+    packages=['django_goncord'],
     include_package_data=True,
     package_data={'': ['*.*']},
-    install_requires=['setuptools', 'requests'],
+    install_requires=['setuptools', 'requests', 'Django>=1.10,<1.11'],
     zip_safe=False,
     keywords=['django', 'auth', 'goncord', 'admin']
 )

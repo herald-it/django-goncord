@@ -2,7 +2,7 @@ from django.contrib.auth.middleware import RemoteUserMiddleware
 from django.core.exceptions import ImproperlyConfigured
 from django.contrib import auth
 
-from app.backends import goncord
+from .backends import goncord
 
 import base64
 import json
