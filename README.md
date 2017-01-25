@@ -17,7 +17,7 @@ After installation register middleware and authentication backend in settings
 MIDDLEWARE_CLASSES = [
     ...
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'app.middleware.GoncordMiddleware',
+    'django_goncord.middleware.GoncordMiddleware',
     ...
 ]
 
