@@ -4,7 +4,7 @@ from setuptools import (
     setup,
     find_packages)
 
-version = '0.1.6'
+version = '0.1.7'
 
 if sys.argv[-1] == 'tag':
     print("Tagging the version on github:")
@@ -42,7 +42,8 @@ setup(
     ],
     license='MIT',
 
-    packages=['django_goncord'],
+    packages=["django_goncord"],
+    package_dir={"django_goncord": "django_goncord"},
     include_package_data=True,
     package_data={'': ['*.*']},
     install_requires=['setuptools', 'requests', 'Django>=1.10,<1.11'],

@@ -54,6 +54,7 @@ class GoncordMiddleware(RemoteUserMiddleware):
         if request.user.is_authenticated():
             if request.user.get_username() == \
                     self.clean_username(payloads['login'], request):
+                goncord.update_user(request.user, payloads)
                 return
             else:
                 self._remove_invalid_user(request)
