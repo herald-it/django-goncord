@@ -4,7 +4,6 @@ from django.contrib import auth
 
 from .backends import goncord
 
-import base64
 import json
 
 
@@ -23,12 +22,6 @@ class GoncordMiddleware(RemoteUserMiddleware):
             creds['payload'] = json.loads(creds['payload'].replace("'", '"'))
 
         return creds
-
-    def decode_base64(self, data):
-        missing_padding = len(data) % 4
-        if missing_padding != 0:
-            data += '=' * (4 - missing_padding)
-        return base64.b64decode(data).decode()
 
     def process_request(self, request):
 
