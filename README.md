@@ -61,22 +61,22 @@ For using special methods like **login** import **goncord** from **django_goncor
 
 ### login(request, data)
 provide request for authenticate user
-require: django request object and data for submitting to remote server
+> require: django request object and data for submitting to remote server
 
 ### logout(request)
 provide request for logout user
-require: django request object
+> require: django request object
 
 ### validate(request)
 provide token validation for user on remote server
-require: django request object
+> require: django request object
 
 ### register(data)
 provide user registration request
-require: data for submitting to remote server
+> require: data for submitting to remote server
 
 ### reset_password(request, data)
 provide password reset for authenticated user
-require: django request object and data for submitting to remote server
+> require: django request object and data for submitting to remote server
 
 all methods return response result from remote server
