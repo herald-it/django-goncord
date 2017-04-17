@@ -4,8 +4,6 @@ from django.contrib import auth
 
 from .backends import goncord
 
-import json
-
 
 class GoncordMiddleware(RemoteUserMiddleware):
 
@@ -14,14 +12,9 @@ class GoncordMiddleware(RemoteUserMiddleware):
     def validate(self, request):
         r = goncord.validate(request)
 
-        if r.status_code != 200:
-            return
-
-        creds = r.json()
-        if creds['payload']:
-            creds['payload'] = json.loads(creds['payload'].replace("'", '"'))
-
-        return creds
+        if not r.ok:
+            return None
+        return r.json()
 
     def process_request(self, request):
 
@@ -47,13 +40,13 @@ class GoncordMiddleware(RemoteUserMiddleware):
         if request.user.is_authenticated():
             if request.user.get_username() == \
                     self.clean_username(payloads['login'], request):
-                goncord.update_user(request.user, payloads)
+                goncord.sync_user(request.user, payloads)
                 return
             else:
                 self._remove_invalid_user(request)
 
         user = auth.authenticate(remote_user=payloads['login'])
-        goncord.update_user(user, payloads)
+        goncord.sync_user(user, payloads)
 
         if user:
             request.user = user

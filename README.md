@@ -3,7 +3,7 @@ Django auth system.
 
 Tested with Django 1.10.4 and Python 3.5.
 
-### Installation guide
+## Installation guide
 
 First install package using pip
 
@@ -33,15 +33,50 @@ Then register auth system url parameters in settings
 ```python
 GONCORD = {
     'BASE_URL': 'URL like http://www.my-site.ru',
-    'VALIDATE_URL': 'SUB_URL like /validate',
-    'LOGIN_URL': 'SUB_URL like /login',
-    'LOGOUT_URL': 'SUB_URL like /logout',
-    'REGISTER_URL': 'SUB_URL like /register'
 }
 ```
 
-for authentication you can register only **BASE_URL**, **VALIDATE_URL**, **LOGIN_URL** and **LOGOUT_URL**
+You can define your own authentication urls
+
+```python
+GONCORD = {
+    ...
+    'VALIDATE_URL': 'SUB_URL like /validate',
+    'LOGIN_URL': 'SUB_URL like /login',
+    'LOGOUT_URL': 'SUB_URL like /logout',
+    'REGISTER_URL': 'SUB_URL like /register',
+    'UPDATE_PAYLOADS_URL': 'SUB_URL like /update',
+    'RESET_PASSWORD_URL': 'SUB_URL like /reset_password',
+    ...
+}
+```
 
 at the end specify Django **LOGIN_URL** parameter
 
 for working with package use **login_required** decorator from **django.contrib.auth.decorators**
+
+For using special methods like **login** import **goncord** from **django_goncord.backends**
+
+## django_goncord.backends.goncord methods
+
+### login(request, data)
+provide request for authenticate user
+> require: django request object and data for submitting to remote server
+
+### logout(request)
+provide request for logout user
+> require: django request object
+
+### validate(request)
+provide token validation for user on remote server
+> require: django request object
+
+### register(data)
+provide user registration request
+> require: data for submitting to remote server
+
+### reset_password(request, data)
+provide password reset for authenticated user
+> require: django request object and data for submitting to remote server
+
+all methods return response result from remote server

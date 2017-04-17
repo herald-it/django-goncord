@@ -3,7 +3,6 @@ from django.contrib.auth import settings
 from django.core.exceptions import ImproperlyConfigured
 
 import requests
-import json
 
 
 class Goncord(object):
@@ -14,6 +13,8 @@ class Goncord(object):
     register_url = ""
     update_payloads_url = ""
     reset_password_url = ""
+
+    x_app_token = ""
 
     def __init__(self):
         if not hasattr(settings, 'GONCORD'):
@@ -47,6 +48,12 @@ class Goncord(object):
             self.register_url = '%s%s' % (
                 settings.GONCORD['BASE_URL'], settings.GONCORD['REGISTER_URL'])
 
+        if 'UPDATE_USER_URL' not in settings.GONCORD:
+            self.update_user_url = '/update'
+        else:
+            self.update_user_url = '%s%s' % (
+                settings.GONCORD['BASE_URL'], settings.GONCORD['UPDATE_USER_URL'])
+
         if 'UPDATE_PAYLOADS_URL' not in settings.GONCORD:
             self.update_payloads_url = '/update'
         else:
@@ -61,56 +68,68 @@ class Goncord(object):
                 settings.GONCORD['BASE_URL'],
                 settings.GONCORD['RESET_PASSWORD_URL'])
 
+        if hasattr(settings, 'GONCORD_SERVICE_TOKEN'):
+            self.x_app_token = settings.GONCORD_SERVICE_TOKEN
+
+    def prepare_cookie(self, request):
+        return 'Bearer {}'.format(request.COOKIES['jwt'])
+
     def login(self, request, data):
-        return requests.post(self.login_url, data)
+        return requests.post(self.login_url, json=data)
 
     def logout(self, request):
         logout(request)
-        requests.post(self.logout_url, cookies=request.COOKIES)
+        return requests.delete(self.logout_url, headers={
+            'Authorization': self.prepare_cookie(request)
+        })
 
     def validate(self, request):
-        return requests.post(self.validate_url, cookies=request.COOKIES)
+        return requests.get(self.validate_url, headers={
+            'Authorization': self.prepare_cookie(request)
+        })
 
     def register(self, data):
-        return requests.post(self.register_url, data)
+        return requests.post(self.register_url, json=data)
+
+    def update_user(self, request, data):
+        return requests.patch(self.update_user_url, json=data, headers={
+            'Authorization': self.prepare_cookie(request),
+            'x-app-token': self.x_app_token
+        })
 
     def update_payload(self, request, data):
-        return requests.post(self.update_payloads_url, data,
-                             cookies=request.COOKIES)
+        return requests.patch(self.update_payloads_url, json=data, headers={
+            'Authorization': self.prepare_cookie(request),
+            'x-app-token': self.x_app_token
+        })
 
     def reset_password(self, request, data):
-        return requests.post(self.reset_password_url, data,
-                             cookies=request.COOKIES)
+        return requests.post(self.reset_password_url, json=data, headers={
+            'Authorization': self.prepare_cookie(request)
+        })
 
     def get_menu(self, request):
-        r = self.validate(request)
+        r = requests.get(
+            '{}{}'.format(settings.GONCORD['BASE_URL'], '/api/v0/menu'),
+            headers={
+                'Authorization': self.prepare_cookie(request)
+            })
 
-        if r.status_code != 200:
+        print(r.json())
+
+        if not r.ok:
             return
 
-        menu = r.json()
-        if 'payload' not in menu:
-            return {}
+        return r.json()
 
-        menu = json.loads(menu['payload'].replace("'", '"'))
-        if 'roles' not in menu:
-            return {}
-
-        return menu['roles']
-
-    def update_user(self, user, data):
+    def sync_user(self, user, data):
         updated = False
 
-        if user.email != data['email']:
-            user.email = data['email']
-            updated = True
-
-        if 'payload' in data:
-            for key, value in data['payload'].items():
-                if hasattr(user, key):
-                    if getattr(user, key) != data['payload'][key]:
-                        setattr(user, key, data['payload'][key])
-                        updated = True
+        for key, value in data.items():
+            if hasattr(user, key):
+                if getattr(user, key) != data[key]:
+                    setattr(user, key, data[key])
+                    updated = True
 
         if updated:
             user.save()
