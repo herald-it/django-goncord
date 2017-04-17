@@ -1,3 +1,0 @@
-setuptools
-requests
-Django>=1.10,<1.11

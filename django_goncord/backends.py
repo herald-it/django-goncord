@@ -2,7 +2,11 @@ from django.contrib.auth import logout
 from django.contrib.auth import settings
 from django.core.exceptions import ImproperlyConfigured
 
+from django.dispatch import Signal
+
 import requests
+
+from pprint import pprint
 
 
 class Goncord(object):
@@ -133,16 +137,8 @@ class Goncord(object):
         return r.json()
 
     def sync_user(self, user, data):
-        updated = False
-
-        for key, value in data.items():
-            if hasattr(user, key):
-                if getattr(user, key) != data[key]:
-                    setattr(user, key, data[key])
-                    updated = True
-
-        if updated:
-            user.save()
+        update_signal.send(sender=self.__class__, user=user, data=data)
 
 
 goncord = Goncord()
+update_signal = Signal(providing_args=["user", "data"])
