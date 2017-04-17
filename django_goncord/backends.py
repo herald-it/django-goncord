@@ -25,44 +25,54 @@ class Goncord(object):
                 'Register BASE_URL in settings.GONCORD required')
 
         if 'LOGIN_URL' not in settings.GONCORD:
-            self.login_url = '/login'
+            self.login_url = '%s%s' % (
+                settings.GONCORD['BASE_URL'], '/api/v0/tokens')
         else:
             self.login_url = '%s%s' % (
                 settings.GONCORD['BASE_URL'], settings.GONCORD['LOGIN_URL'])
 
         if 'LOGOUT_URL' not in settings.GONCORD:
-            self.logout_url = '/logout'
+            self.logout_url = '%s%s' % (
+                settings.GONCORD['BASE_URL'], '/api/v0/tokens')
         else:
             self.logout_url = '%s%s' % (
                 settings.GONCORD['BASE_URL'], settings.GONCORD['LOGOUT_URL'])
 
         if 'VALIDATE_URL' not in settings.GONCORD:
-            self.validate_url = '/validate'
+            self.validate_url = '%s%s' % (
+                settings.GONCORD['BASE_URL'], '/api/v0/tokens/validate')
         else:
             self.validate_url = '%s%s' % (
                 settings.GONCORD['BASE_URL'], settings.GONCORD['VALIDATE_URL'])
 
         if 'REGISTER_URL' not in settings.GONCORD:
-            self.register_url = '/register'
+            self.register_url = '%s%s' % (
+                settings.GONCORD['BASE_URL'], '/api/v0/users')
         else:
             self.register_url = '%s%s' % (
                 settings.GONCORD['BASE_URL'], settings.GONCORD['REGISTER_URL'])
 
         if 'UPDATE_USER_URL' not in settings.GONCORD:
-            self.update_user_url = '/update'
+            self.update_user_url = '%s%s' % (
+                settings.GONCORD['BASE_URL'], '/api/v0/users')
         else:
             self.update_user_url = '%s%s' % (
-                settings.GONCORD['BASE_URL'], settings.GONCORD['UPDATE_USER_URL'])
+                settings.GONCORD['BASE_URL'],
+                settings.GONCORD['UPDATE_USER_URL'])
 
         if 'UPDATE_PAYLOADS_URL' not in settings.GONCORD:
-            self.update_payloads_url = '/update'
+            self.update_payloads_url = '%s%s' % (
+                settings.GONCORD['BASE_URL'],
+                '/api/v0/resource/self_update')
         else:
             self.update_payloads_url = '%s%s' % (
                 settings.GONCORD['BASE_URL'],
                 settings.GONCORD['UPDATE_PAYLOADS_URL'])
 
         if 'RESET_PASSWORD_URL' not in settings.GONCORD:
-            self.reset_password_url = '/reset'
+            self.reset_password_url = '%s%s' % (
+                settings.GONCORD['BASE_URL'],
+                '/api/v0/users/change_password')
         else:
             self.reset_password_url = '%s%s' % (
                 settings.GONCORD['BASE_URL'],

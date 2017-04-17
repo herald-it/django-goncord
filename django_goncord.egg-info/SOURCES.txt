@@ -1,0 +1,14 @@
+MANIFEST.in
+README.md
+setup.cfg
+setup.py
+django_goncord/__init__.py
+django_goncord/apps.py
+django_goncord/backends.py
+django_goncord/middleware.py
+django_goncord.egg-info/PKG-INFO
+django_goncord.egg-info/SOURCES.txt
+django_goncord.egg-info/dependency_links.txt
+django_goncord.egg-info/not-zip-safe
+django_goncord.egg-info/requires.txt
+django_goncord.egg-info/top_level.txt
