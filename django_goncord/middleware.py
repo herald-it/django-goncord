@@ -46,8 +46,7 @@ class GoncordMiddleware(RemoteUserMiddleware):
                 self._remove_invalid_user(request)
 
         user = auth.authenticate(remote_user=payloads['login'])
-        goncord.sync_user(user, payloads)
-
         if user:
-            request.user = user
+            goncord.sync_user(user, payloads)
             auth.login(request, user)
+            request.user = user
