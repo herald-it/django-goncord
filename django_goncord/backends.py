@@ -6,8 +6,6 @@ from django.dispatch import Signal
 
 import requests
 
-from pprint import pprint
-
 
 class Goncord(object):
 
@@ -17,6 +15,7 @@ class Goncord(object):
     register_url = ""
     update_payloads_url = ""
     reset_password_url = ""
+    recovery_password_url = ""
 
     x_app_token = ""
 
@@ -82,6 +81,15 @@ class Goncord(object):
                 settings.GONCORD['BASE_URL'],
                 settings.GONCORD['RESET_PASSWORD_URL'])
 
+        if 'RECOVERY_PASSWORD_URL' not in settings.GONCORD:
+            self.recovery_password_url = '%s%s' % (
+                settings.GONCORD['BASE_URL'],
+                '/api/v0/users/force_change_password')
+        else:
+            self.recovery_password_url = '%s%s' % (
+                settings.GONCORD['BASE_URL'],
+                settings.GONCORD['RECOVERY_PASSWORD_URL'])
+
         if hasattr(settings, 'GONCORD_SERVICE_TOKEN'):
             self.x_app_token = settings.GONCORD_SERVICE_TOKEN
 
@@ -120,6 +128,11 @@ class Goncord(object):
     def reset_password(self, request, data):
         return requests.post(self.reset_password_url, json=data, headers={
             'Authorization': self.prepare_cookie(request)
+        })
+
+    def recovery_password(self, data):
+        return requests.post(self.recovery_password_url, json=data, headers={
+            'x-app-token': self.x_app_token
         })
 
     def get_menu(self, request):
